@@ -15,9 +15,18 @@ turn_map = 	{
 		}
 
 # track steps in each direction
-steps_tracker = {"N":0, "E":0, "S":0, "W":0}
+x_steps = 0
+y_steps = 0
 # current direction tracker
 curr_dir = starting_dir
+
+# for part 2 of the problem, need to track visited locations using set
+visited = set()
+# add origin to visited
+visited.add((x_steps, y_steps))
+
+# flag to break out of outer loop
+found = False
 
 # going through instructions
 for instruction in input:
@@ -27,10 +36,52 @@ for instruction in input:
 	# find the new current direction
 	curr_dir = turn_map[curr_dir][turn]
 	# add steps to sum in correct direction
-	steps_tracker[curr_dir] += steps
+	# need to add steps one by one
+	if curr_dir == "N":
+		for count in xrange(steps):
+			y_steps += 1
+			# check if not visited
+			if (x_steps, y_steps) not in visited:
+				# add to set of visited locations
+				visited.add((x_steps,y_steps))
+			else:	# if already visited, we are at HQ
+				found = True
+				break
+	elif curr_dir == "S":
+		for count in xrange(steps):
+			y_steps -= 1
+			# check if not visited
+			if (x_steps, y_steps) not in visited:
+				# add to set of visited locations
+				visited.add((x_steps,y_steps))
+			else:	# if already visited, we are at HQ
+				found = True
+				break
+	elif curr_dir == "E":
+		for count in xrange(steps):
+			x_steps += 1
+			# check if not visited
+			if (x_steps, y_steps) not in visited:
+				# add to set of visited locations
+				visited.add((x_steps,y_steps))
+			else:	# if already visited, we are at HQ
+				found = True
+				break
+	elif curr_dir == "W":
+		for count in xrange(steps):
+			x_steps -= 1
+			# check if not visited
+			if (x_steps, y_steps) not in visited:
+				# add to set of visited locations
+				visited.add((x_steps,y_steps))
+			else:	# if already visited, we are at HQ
+				found = True
+				break
 
-x_steps = steps_tracker["E"] - steps_tracker["W"]
-y_steps = steps_tracker["N"] - steps_tracker["S"]
+	if found:
+		break
+			
+
 distance = abs(x_steps) + abs(y_steps)
 
 print distance
